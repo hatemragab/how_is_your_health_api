@@ -44,19 +44,55 @@ class UserController extends Controller
         }
     }
 
-    public function getUser($id)
+    public function getUser(Request $request)
     {
-        // logic to get a student record goes here
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+
+        ]);
+        if ($validator->fails()) {
+            $output['error'] = true;
+            $output['data'] = $validator->errors()->first();
+            return response()->json($output);
+        } else {
+            $output['error'] = false;
+
+            $user = User::where('id', $request->id)->first();
+
+            $output['data'] = $user;
+
+            return response()->json($output);
+        }
+
     }
 
-    public function updateUser(Request $request, $id)
+    public function updateUser(Request $request)
     {
-        // logic to update a student record goes here
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $output['error'] = true;
+            $output['data'] = $validator->errors()->first();
+            return response()->json($output);
+        } else {
+            $user = User::where('id', $request->id)->first();
+            $user->name=$request->name;
+            $user->phone=$request->phone;
+            $user->password=$request->password;
+            $output['error'] = false;
+            $output['data'] =$user;
+            return response()->json($output);
+        }
+
     }
 
-    public function deleteUser($id)
+    public function deleteUser(Request $request)
     {
-        // logic to delete a student record goes here
+        DB::table('users')->where('id',$request->id)->delete();
+        $output['error'] = false;
+        $output['data'] ='user deleted';
+        return response()->json($output);
     }
 
     public function add_update_user_img(Request $request)
@@ -67,7 +103,6 @@ class UserController extends Controller
 
         ]);
         if ($validator->fails()) {
-
             $output['error'] = true;
             $output['data'] = $validator->errors()->first();
             return response()->json($output);
@@ -77,7 +112,9 @@ class UserController extends Controller
             $user->img = $Iamge_name;
             $user->save();
             $request->img->move(Public_path('images/users_profile_img'), $Iamge_name);
-            return response()->json($user->img);
+            $output['error'] = false;
+            $output['data'] = $user->img;
+            return response()->json($output);
         }
     }
 

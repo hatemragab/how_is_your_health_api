@@ -16,4 +16,6 @@ use Illuminate\Http\Request;
 Route::get('users','UserController@getAllUsers');
 Route::post('createUsers', 'UserController@createUsers');
 Route::post('userLogin', 'UserController@userLogin');
+Route::post('getUserById', 'UserController@getUser');
+Route::post('updateUser', 'UserController@updateUser');
 Route::post('add_update_user_img', 'UserController@add_update_user_img');
