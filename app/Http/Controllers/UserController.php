@@ -22,7 +22,7 @@ class UserController extends Controller
     public function createUsers(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:10|min:6',
+            'name' => 'required|max:20|min:2',
             'email' => 'required|unique:users|email:rfc,dns',
             'phone' => 'max:20',
             'password' => 'required|min:6',
@@ -38,6 +38,7 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->password = $request->password;
+            $user->is_doctor = $request->is_doctor;
             $user->save();
             $output['data'] = $user;
             return response()->json($output);
